@@ -3,17 +3,10 @@ import { useSimulation } from '../context/SimulationContext';
 import { calculateMemoryTokenPrice } from '../utils/memory';
 
 export function MemoryManager() {
-  const { memories, currentUser, createMemory, stakeAttn, boostRevenue, redeemPosition, redeemCreatorEarnings } = useSimulation();
+  const { memories, currentUser, stakeAttn, boostRevenue, redeemPosition, redeemCreatorEarnings } = useSimulation();
   const [newMemoryName, setNewMemoryName] = useState('');
   const [stakeAmount, setStakeAmount] = useState('');
   const [boostAmount, setBoostAmount] = useState('');
-
-  const handleCreateMemory = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!currentUser || !newMemoryName) return;
-    createMemory(newMemoryName, currentUser.address);
-    setNewMemoryName('');
-  };
 
   const handleStake = (memoryId: string) => {
     if (!stakeAmount) return;
@@ -31,25 +24,6 @@ export function MemoryManager() {
     <div className="p-4">
       <h2 className="text-2xl font-bold mb-4">Memory Manager</h2>
       
-      {/* Create Memory Form */}
-      <form onSubmit={handleCreateMemory} className="mb-8">
-        <div className="flex gap-2">
-          <input
-            type="text"
-            value={newMemoryName}
-            onChange={(e) => setNewMemoryName(e.target.value)}
-            placeholder="Memory Name"
-            className="border p-2 rounded"
-          />
-          <button
-            type="submit"
-            className="bg-blue-500 text-white px-4 py-2 rounded"
-          >
-            Create Memory
-          </button>
-        </div>
-      </form>
-
       {/* Memories List */}
       <div className="space-y-4">
         {memories.map((memory) => (
@@ -101,7 +75,7 @@ export function MemoryManager() {
                 {/* Action Buttons */}
                 <div className="space-y-2">
                   <button
-                    onClick={() => redeemPosition(memory.id)}
+                    onClick={() => currentUser && redeemPosition(memory.id, currentUser.address)}
                     className="bg-yellow-500 text-white px-4 py-2 rounded w-full"
                   >
                     Redeem Position
