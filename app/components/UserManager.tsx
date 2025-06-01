@@ -4,11 +4,12 @@ import { useSimulation } from '../context/SimulationContext';
 export function UserManager() {
   const { currentUser, selectUser } = useSimulation();
   const [address, setAddress] = useState('');
+  const [role, setRole] = useState<'staker' | 'advertiser' | 'creator'>('staker');
 
   const handleSelectUser = (e: React.FormEvent) => {
     e.preventDefault();
     if (!address) return;
-    selectUser(address);
+    selectUser(address, role);
     setAddress('');
   };
 
@@ -18,7 +19,7 @@ export function UserManager() {
       
       {/* User Selection Form */}
       <form onSubmit={handleSelectUser} className="mb-4">
-        <div className="flex gap-2">
+        <div className="flex gap-2 mb-2">
           <input
             type="text"
             value={address}
@@ -26,6 +27,15 @@ export function UserManager() {
             placeholder="Enter Address"
             className="border p-2 rounded flex-1"
           />
+          <select
+            value={role}
+            onChange={(e) => setRole(e.target.value as 'staker' | 'advertiser' | 'creator')}
+            className="border p-2 rounded"
+          >
+            <option value="staker">Staker</option>
+            <option value="advertiser">Advertiser</option>
+            <option value="creator">Creator</option>
+          </select>
           <button
             type="submit"
             className="bg-blue-500 text-white px-4 py-2 rounded"
@@ -40,6 +50,7 @@ export function UserManager() {
         <div className="bg-gray-50 p-4 rounded">
           <h3 className="text-lg font-semibold mb-2">Current User</h3>
           <p>Address: {currentUser.address}</p>
+          <p>Role: {currentUser.role}</p>
           <p>ATTN Balance: {currentUser.attnBalance.toFixed(2)}</p>
           <div className="mt-2">
             <h4 className="font-semibold">Memory Tokens:</h4>
